@@ -1,3 +1,4 @@
+// VerifyBlock.js
 import {
   MiniKit,
   VerificationLevel,
@@ -19,7 +20,11 @@ const verifyPayload: VerifyCommandInput = {
   verification_level: VerificationLevel.Orb, // Orb | Device
 };
 
-export const VerifyBlock = () => {
+interface VerifyBlockProps {
+  onVerifySuccess: () => void;
+}
+
+export const VerifyBlock = ({ onVerifySuccess }: VerifyBlockProps) => {
   const [handleVerifyResponse, setHandleVerifyResponse] = useState<
     MiniAppVerifyActionErrorPayload | IVerifyResponse | null
   >(null);
@@ -42,40 +47,40 @@ export const VerifyBlock = () => {
     }
 
     // Verify the proof in the backend
-    const verifyResponse = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/verify`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          payload: finalPayload as ISuccessResult, // Parses only the fields we need to verify
-          action: verifyPayload.action,
-          signal: verifyPayload.signal, // Optional
-        }),
-      }
-    );
+    const verifyResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        payload: finalPayload as ISuccessResult,
+        action: verifyPayload.action,
+        signal: verifyPayload.signal, // Optional
+      }),
+    });
 
-    // TODO: Handle Success!
     const verifyResponseJson = await verifyResponse.json();
 
     if (verifyResponseJson.status === 200) {
       console.log("Verification success!");
       console.log(finalPayload);
+      onVerifySuccess(); // Call the success callback
     }
 
     setHandleVerifyResponse(verifyResponseJson);
     return verifyResponseJson;
-  }, []);
+  }, [onVerifySuccess]);
 
   return (
-    <div>
-      <h1>Verify Block</h1>
-      <button className="bg-green-500 p-4" onClick={handleVerify}>
-        Test Verify
+    <div className="text-center">
+      <h1 className="text-2xl font-bold mb-4">Verify Your Identity</h1>
+      <button
+        className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
+        onClick={handleVerify}
+      >
+        Verify
       </button>
-      <span>{JSON.stringify(handleVerifyResponse, null, 2)}</span>
+      <span>{handleVerifyResponse && JSON.stringify(handleVerifyResponse, null, 2)}</span>
     </div>
   );
 };

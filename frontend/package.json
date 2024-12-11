@@ -14,9 +14,12 @@
     "@worldcoin/minikit-js": "1.1.1",
     "dotenv": "^16.4.5",
     "eruda": "^3.3.0",
+    "lucide-react": "^0.468.0",
     "next-auth": "^4.24.8",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router": "^7.0.2",
+    "viem": "^2.21.54"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
