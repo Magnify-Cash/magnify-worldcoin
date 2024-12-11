@@ -22,14 +22,16 @@ const verifyPayload: VerifyCommandInput = {
 
 interface VerifyBlockProps {
   onVerifySuccess: () => void;
-  onVerifyError: (error: MiniAppVerifyActionErrorPayload | IVerifyResponse) => void;
+  onVerifyError: (
+    error: MiniAppVerifyActionErrorPayload | IVerifyResponse | { status: "error"; message: string },
+  ) => void;
 }
 
 export const VerifyBlock = ({ onVerifySuccess, onVerifyError }: VerifyBlockProps) => {
   const handleVerify = useCallback(async () => {
     if (!MiniKit.isInstalled()) {
       console.warn("Tried to invoke 'verify', but MiniKit is not installed.");
-      onVerifyError({ status: "error", message: "MiniKit not installed" } as MiniAppVerifyActionErrorPayload);
+      onVerifyError({ status: "error", message: "MiniKit not installed" });
       return;
     }
 
@@ -67,7 +69,7 @@ export const VerifyBlock = ({ onVerifySuccess, onVerifyError }: VerifyBlockProps
       }
     } catch (error) {
       console.error("Verification process failed:", error);
-      onVerifyError({ status: "error", message: "Verification failed" } as MiniAppVerifyActionErrorPayload);
+      onVerifyError({ status: "error", message: "Verification failed" });
     }
   }, [onVerifySuccess, onVerifyError]);
 

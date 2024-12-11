@@ -1,7 +1,7 @@
 // SplashScreen.tsx
 import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { VerifyBlock } from "../components/Verify";
 
 const SplashScreen = () => {
@@ -10,7 +10,13 @@ const SplashScreen = () => {
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const { handleVerify } = VerifyBlock({
     onVerifySuccess,
-    onVerifyError: (error) => setVerificationError(error.message || "An error occurred during verification."),
+    onVerifyError: (error) => {
+      if ("message" in error) {
+        setVerificationError(error.message || "An error occurred during verification.");
+      } else {
+        setVerificationError("An unknown error occurred during verification.");
+      }
+    },
   });
 
   useEffect(() => {
