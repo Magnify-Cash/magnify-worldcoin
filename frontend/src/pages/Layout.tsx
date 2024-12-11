@@ -6,7 +6,7 @@ const Layout = () => {
   const navigate = useNavigate();
 
   // Check if the current path matches and apply 'active' class accordingly
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <div className="bg-white text-gray-800 min-h-screen flex flex-col">
